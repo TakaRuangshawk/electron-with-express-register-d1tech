@@ -9,12 +9,73 @@
 		<p>Welcome to <%= title %>
 		</p>
 		<br />
+		<div id="message">⏳ รอกำลังเสียบบัตร...</div>
+
+		<div class="content-area">
+			<div class="camera">
+			  <video id="video">Video stream not available.</video>
+			  <button id="start-button">Take photo</button>
+			</div>
+			<canvas id="canvas" style="display:none;"> </canvas>
+			<div class="output">
+			  <img id="photo" alt="The screen capture will appear in this box." />
+			</div>
+		  </div>
+		  <button id="print-btn">🖨️ Send to Printer</button>
+		  <pre id="print-result"></pre>
+
 		<p>Other Pages:</p>
 		<a href="/pageTwo">Page Two</a>
 		<br />
 		<a href="/pageThree">Page Three</a>
 		<br />
 		<a href="/pageFour">Page Four</a>
+		<script type="module" src="/javascript/camera.js"></script>
+		<script>
+			document.getElementById("print-btn").addEventListener("click", async () => {
+			  const payload = {
+				type: 4,
+				comPort: "",
+				baudRate: 0,
+				handshake: 0,
+				lptPort: "",
+				ipAddress: "",
+				portNumber: 0,
+				driverName: "",
+				usbId: 912,
+				usbPrinterName: "",
+				widthDPI: 203,
+				heightDPI: 203,
+				printerType: "KIOSK",
+				thaiLines: [
+				  "กมลทรรศน์",
+				  "เรืองสถิตสถาพร",
+				  "06/06/2025",
+				  "110xxxxxxx462",
+				  "Dataone Asia"
+				]
+			  };
+		  
+			  try {
+				const response = await fetch("https://localhost:7213/connect", {
+					  method: "POST",
+					  headers: { "Content-Type": "application/json" },
+					  body: JSON.stringify(payload)
+					});
+					
+					const result = await response.json();
+					
+					if (result.success) {
+					  document.getElementById("print-result").textContent = "✅ " + result.message;
+					} else {
+					  document.getElementById("print-result").textContent = "❌ " + result.message;
+					}
+			  } catch (error) {
+				document.getElementById("print-result").textContent = "❌ Error: " + error.message;
+			  }
+			});
+		  </script>
+		  
 	</body>
 
 	</html>

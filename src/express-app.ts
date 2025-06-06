@@ -7,10 +7,17 @@ import http from "http";
 import createError from "http-errors";
 import { expressPort } from "../package.json";
 import cors from "cors";
+import { Server as IOServer } from "socket.io";
 
 const app = express();
 const router = express.Router();
-
+const server = http.createServer(app);
+const io = new IOServer(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 const routes = [
   { path: "/", viewName: "index", title: "Home" },
   { path: "/pageTwo", viewName: "pageTwo", title: "Page 2" },
@@ -38,16 +45,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/", router);
-app.use((_req, _res, next) => next(createError(404)));
 app.use((err: any, req: any, res: any, _next: any) => {
-  res.locals.title = "error";
+  res.locals.title = "erro=r";
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   res.status(err.status || 500).render("error");
 });
+app.post('/card-event', (req, res) => {
+  const { status, data } = req.body;
 
-const server = http.createServer(app);
+  if (status === 'inserted') {
+    io.emit('card-inserted');
+  } else if (status === 'removed') {
+    io.emit('card-removed');
+  } else if (status === 'card-data') {
+    io.emit('card-data', data); 
+  }
+
+  res.status(200).send('OK');
+});
+
+
+app.use((_req, _res, next) => next(createError(404)));
+
 
 function handleServerError(error: any) {
   if (error.syscall !== "listen") throw error;

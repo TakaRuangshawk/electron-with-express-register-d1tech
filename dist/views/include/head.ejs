@@ -5,7 +5,7 @@
 	<script type="module">
 		import { io } from "http://cdn.socket.io/4.8.0/socket.io.esm.min.js";
 
-		const socket = io('http://localhost:3001');
+		const socket = io('http://localhost:3000');
 
 		socket.on('connect', () => {
 			console.log('Connected to server');
@@ -15,5 +15,18 @@
 		socket.on('hello', (message) => {
 			console.log(message);
 		});
+		socket.on("card-inserted", (data) => {
+  			const msgBox = document.getElementById("message");
+  			msgBox.innerText = `📇 พบสมาร์ตการ์ด:\n${JSON.stringify(data, null, 2)}`;
+  		});
+		socket.on("card-data", (data) => {
+  			const msgBox = document.getElementById("message");
+		  	msgBox.innerText = `✅ อ่านข้อมูลสำเร็จ:\n${JSON.stringify(data, null, 2)}`;
+		});
+  		socket.on("card-removed", () => {
+  		  const msgBox = document.getElementById("message");
+  		  msgBox.innerText = "⏳ รอกำลังเสียบบัตร...";
+  		});
 	</script>
+
 </head>

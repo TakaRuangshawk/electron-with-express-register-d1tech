@@ -1,4 +1,4 @@
-import { app, globalShortcut, BrowserWindow, ipcMain } from "electron";
+import { app, globalShortcut, BrowserWindow, ipcMain,session } from "electron";
 import { Readable } from "stream";
 import { spawn } from "child_process";
 import path from "path";
@@ -90,12 +90,13 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
-    width: 640,
-    height: 480,
+    width: 1600,
+    height: 900,
     icon: path.join(__dirname, "..", "favicon.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
+   
   });
 
   mainWindow.on("closed", () => {
@@ -108,7 +109,7 @@ function createWindow() {
 
   ipcMain.handle("get-express-app-url", () => expressAppUrl);
 
-  mainWindow.loadURL(`file://${__dirname}/../index.html`);
+  mainWindow.loadURL(`http://localhost:3000`);
 }
 
 app.on("window-all-closed", () => {
@@ -117,6 +118,13 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === "media") {
+      callback(true); 
+    } else {
+      callback(false);
+    }
+  });
   registerGlobalShortcuts();
   createWindow();
 
