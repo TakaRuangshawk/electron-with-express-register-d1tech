@@ -253,7 +253,7 @@
 			  /* display: none; */
 			  justify-content: center;
 			  align-items: center;
-			  height: 144vh;
+			  top: 400px;
 			  position: relative;
 			}
 
@@ -281,6 +281,71 @@
 			  color: #1b1f75;
 			  font-size: 42px;
 			  margin-top: 12px;
+			}
+
+
+
+			#page-confirm h1 {
+			  position: relative;
+    		  top: 100px;
+			  color: #123b77;
+			  font-size: 56px;
+			  font-weight: bold;
+			  margin-top: 60px;
+			  margin-bottom: 32px;
+			  text-align: center;
+			}
+
+			.confirm-flex {
+			  display: flex;
+			  flex-direction: row;
+			  align-items: flex-start;
+			  justify-content: center;
+			  width: 100%;
+			  max-width: 1500px;
+			  margin: 0 auto 60px auto;
+			  gap: 80px;
+			  position: relative;
+    		  top: 100px;
+			}
+
+			.confirm-photo {
+			  flex: 0 0 500px;
+			  border-radius: 20px;
+			  box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			}
+
+			.confirm-photo img {
+			  border-radius: 16px;
+			  object-fit: cover;
+			}
+
+			.confirm-info {
+			  display: flex;
+			  flex-direction: column;
+			  justify-content: center;
+			  min-width: 520px;
+			  gap: 36px;
+			  padding: 48px 0 0 0;
+			  white-space: nowrap;
+			}
+
+			.confirm-info div {
+			  color: #123b77;
+			  font-size: 44px;
+			  font-weight: bold;
+			  line-height: 1.2;
+			  margin-bottom: 10px;
+			  letter-spacing: 1px;
+			}
+
+			.confirm-info span {
+			  margin-left: 12px;
+			  color: #123b77;
+			  font-weight: bold;
 			}
 
 
@@ -411,6 +476,84 @@
 		  </div>
 		</div>
 
+		<div id="page-camera" class="page">
+			<h1 style="position: relative;top: 150px;font-size:62px">
+			  <%= lang === 'th'
+				? 'ถ่ายภาพเพื่อการยืนยันตัวตน กรุณามองที่กล้องบันทึกภาพ'
+				: 'Take a photo to verify your identity. Please look at the camera' %>
+			</h1>
+		  
+			<div class="camera-center">
+			  <!-- แสดงกล้อง/วิดีโอ -->
+			  <div id="camera-live" style="justify-content: center;position: relative; top: 150px;">
+				<video id="video" autoplay playsinline></video>
+			  </div>
+		  
+			  <!-- แสดงภาพถ่าย (หลังกดถ่าย) -->
+			  <div id="camera-preview" style="display:none;justify-content: center;position: relative; top: 150px;">
+				<img id="photo-preview" alt="Captured photo"/>
+			  </div>
+			</div>
+		  
+			<div class="button-row" style=" position: relative;top: 150px">
+			  <div class="register-button cancel-btn" onclick="goToPageCancelThenRegister()">
+				<img src="/image/button_cancel.png" alt="">
+				<span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
+			  </div>
+			  <div id="btn-capture" class="register-button" onclick="capturePhoto()">
+				<img src="/image/button_register.png" alt="">
+				<span><%= lang === 'th' ? 'ถ่ายภาพ' : 'Take Photo' %></span>
+			  </div>
+			  <div id="btn-retake" class="register-button" style="display:none;position: relative;bottom: 185px; left: 670px;" onclick="retakePhoto()">
+				<img src="/image/button_register.png" alt="">
+				<span><%= lang === 'th' ? 'ถ่ายอีกครั้ง' : 'Retake' %></span>
+			  </div>
+			  <div id="btn-next" class="register-button" style="display:none;" onclick="goToPage('page-confirm')">
+				<img src="/image/button_register.png" alt="">
+				<span><%= lang === 'th' ? 'ยืนยัน' : 'Confirm' %></span>
+			  </div>
+			</div>
+		  </div>
+
+		  <div id="page-confirm" class="page">
+			<h1>
+			  <%= lang === 'th'
+				? 'กรุณายืนยันข้อมูลของท่าน'
+				: 'Please confirm your information' %>
+			</h1>
+		  
+			<div class="confirm-flex">
+			  <div class="confirm-photo">
+				<img id="final-photo" src="" alt="Captured photo"/>
+			  </div>
+			  <div class="confirm-info">
+				<div>
+				  <%= lang === 'th' ? 'หมายเลขบัตรประชาชน:' : 'ID Card No:' %>
+				  <span id="confirm-nid"></span>
+				</div>
+				<div>
+				  <%= lang === 'th' ? 'ชื่อ - นามสกุล:' : 'Full Name:' %>
+				  <span id="confirm-fullname"></span>
+				</div>
+				<div>
+				  <%= lang === 'th' ? 'กลุ่มลูกค้า:' : 'Customer Group:' %>
+				  <span id="confirm-bank"></span>
+				</div>
+			  </div>
+			</div>
+		  
+			<div class="button-row" style="position: relative;top: 150px;">
+			  <div class="register-button cancel-btn" onclick="goToPageCancelThenRegister()">
+				<img src="/image/button_cancel.png" alt="">
+				<span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
+			  </div>
+			  <div class="register-button" onclick="submitRegister()">
+				<img src="/image/button_register.png" alt="">
+				<span><%= lang === 'th' ? 'ยืนยัน' : 'Confirm' %></span>
+			  </div>
+			</div>
+		  </div>
+		  
 		  
 
 		
@@ -449,6 +592,9 @@
       			  body.classList.remove('bg-register');
       			  body.classList.add('bg-default');
       			}
+				if (pageId === 'page-camera') resetCameraPage();
+				if (pageId === 'page-confirm') onShowPageConfirm();
+  
   			}
 			
 
@@ -462,12 +608,73 @@
 			  }, 300);
 			}
 
+			function capturePhoto() {
+			  const canvas = document.createElement('canvas');
+			  const video = document.getElementById('video');
+			  canvas.width = video.videoWidth;
+			  canvas.height = video.videoHeight;
+			  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+						
+			  const dataUrl = canvas.toDataURL('image/png');
+			  window.capturedPhoto = dataUrl;
+						
+			  document.getElementById('camera-live').style.display = 'none';
+			  document.getElementById('camera-preview').style.display = 'flex';
+			  document.getElementById('photo-preview').src = dataUrl;
+						
+			  document.getElementById('btn-capture').style.display = 'none';
+			  document.getElementById('btn-retake').style.display = 'inline-block';
+			  document.getElementById('btn-next').style.display = 'inline-block';
+			}
+			function retakePhoto() {
+			  document.getElementById('camera-live').style.display = 'flex';
+			  document.getElementById('camera-preview').style.display = 'none';
+			  document.getElementById('btn-capture').style.display = 'inline-block';
+			  document.getElementById('btn-retake').style.display = 'none';
+			  document.getElementById('btn-next').style.display = 'none';
+			  window.capturedPhoto = null;
+			}
+			function onShowPageConfirm() {
+			  const data = window.cardData || {};
+			  document.getElementById('final-photo').src = window.capturedPhoto || '';
+			  document.getElementById('confirm-nid').textContent = maskNid(data.nid || '');
+			  document.getElementById('confirm-fullname').textContent = `${data.f_name || ''} ${data.l_name || ''}`;
+			  document.getElementById('confirm-bank').textContent = data.bank || '';
+			}
+
+			function maskNid(nid) {
+			  if (!nid || nid.length < 4) return nid;
+			  // ตัวอย่าง: 1100123456789 → 1100XXXXXXX789
+			  return nid.slice(0,4) + 'XXXXXXX' + nid.slice(-3);
+			}
+
+
 			function goToPageCancelThenRegister() {
 				goToPage('page-cancel');
 			   setTimeout(() => {
 			     goToPage('page-register');
 			   }, 3000);
 			}
+
+			function resetCameraPage() {
+			  // reset ตัวแปร global
+			  window.capturedPhoto = null;
+
+			  // แสดง live video
+			  document.getElementById('camera-live').style.display = 'flex';
+
+			  // ซ่อน preview
+			  document.getElementById('camera-preview').style.display = 'none';
+
+			  // เคลียร์รูป preview
+			  document.getElementById('photo-preview').src = '';
+
+			  // ปุ่มกลับไปสถานะเริ่มต้น
+			  document.getElementById('btn-capture').style.display = 'inline-block';
+			  document.getElementById('btn-retake').style.display = 'none';
+			  document.getElementById('btn-next').style.display = 'none';
+			}
+
 
 
 			// document.getElementById("print-btn").addEventListener("click", async () => {
@@ -489,7 +696,7 @@
 			// 	  "กมลทรรศน์",
 			// 	  "เรืองสถิตสถาพร",
 			// 	  "06/06/2025",
-			// 	  "110xxxxxxx462",
+			// 	  "110xxxxxxx462",ปx
 			// 	  "Dataone Asia"
 			// 	]
 			//   };

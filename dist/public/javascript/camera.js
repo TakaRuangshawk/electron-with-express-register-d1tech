@@ -2,7 +2,7 @@
     // The width and height of the captured photo. We will set the
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
-    const width = 320; // We will scale the photo width to this
+    const width = 640; // We will scale the photo width to this
     let height = 0; // This will be computed based on the input stream
   
     // |streaming| indicates whether or not we're currently streaming
