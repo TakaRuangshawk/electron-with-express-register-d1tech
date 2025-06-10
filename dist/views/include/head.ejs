@@ -6,7 +6,12 @@
 		import { io } from "http://cdn.socket.io/4.8.0/socket.io.esm.min.js";
 
 		const socket = io('http://localhost:3000');
-
+		let currentUser = {
+			  nid: '',
+			  f_name: '',
+			  l_name: '',
+			  bank: ''
+			};
 		socket.on('connect', () => {
 			console.log('Connected to server');
 			socket.emit('hello');
@@ -15,18 +20,41 @@
 		socket.on('hello', (message) => {
 			console.log(message);
 		});
-		socket.on("card-inserted", (data) => {
-  			const msgBox = document.getElementById("message");
-  			msgBox.innerText = `📇 พบสมาร์ตการ์ด:\n${JSON.stringify(data, null, 2)}`;
-  		});
-		socket.on("card-data", (data) => {
-  			const msgBox = document.getElementById("message");
-		  	msgBox.innerText = `✅ อ่านข้อมูลสำเร็จ:\n${JSON.stringify(data, null, 2)}`;
+		socket.on('card-inserted', () => {
+			  
+			  setTimeout(() => goToPage('page-loading'), 1000);
 		});
-  		socket.on("card-removed", () => {
-  		  const msgBox = document.getElementById("message");
-  		  msgBox.innerText = "⏳ รอกำลังเสียบบัตร...";
-  		});
+		socket.on('card-data', data => {
+		  const { nid,f_name, l_name } = data;
+
+		  // เก็บชื่อไว้ใช้ต่อ
+		  window.cardData = {nid, f_name, l_name };
+
+		  fetch('/check-name', {
+		    method: 'POST',
+		    headers: { 'Content-Type': 'application/json' },
+		    body: JSON.stringify({nid, f_name, l_name })
+		  })
+		    .then(res => res.json())
+		    .then(result => {
+		      if (result.found) {
+		        window.cardData.bank = result.bank;
+		        console.log('เลข:', nid ,'ชื่อ:', f_name, l_name, 'ธนาคาร:', result.bank);
+		        goToPage('page-success');
+		      } else {
+		        alert("ไม่พบชื่อในระบบ กรุณาติดต่อเจ้าหน้าที่");
+		      }
+		    });
+		});
+		
+
+		socket.on('card-removed', () => {
+			const currentPage = document.querySelector('.page.active');
+  			if (currentPage && currentPage.id === 'page-success') {
+  			  setTimeout(() => goToPage('page-register'), 1000);
+  			}
+		});
+
 	</script>
 
 </head>

@@ -1,17 +1,421 @@
 <!DOCTYPE html>
 <%- include('include/head'); %>
-	<html lang="en">
+	<html lang="th">
+		<style>
+			.page { display: none; }
+			.page.active { display: block; }
+			body {
+			  margin: 0;
+			  padding: 0;
+			  font-family: sans-serif;
+			}
+			body.bg-register {
+			  background: url('/image/zerostate_th.jpg') no-repeat center center fixed;
+			  background-size: cover;
+			}
 
-	<body>
-		<h1>
-			<%= title %>
-		</h1>
-		<p>Welcome to <%= title %>
-		</p>
-		<br />
-		<div id="message">⏳ รอกำลังเสียบบัตร...</div>
+			body.bg-default {
+			  background: url('/image/bg.jpg') no-repeat center center fixed;
+			  background-size: cover;
+			}
+			.register-container {
+			    position: absolute;
+			    top: 85%;
+			    left: 50%;
+			    transform: translate(-50%, -50%);
+			    cursor: pointer;
+			}
+		
+			.register-button {
+  			  position: relative;
+  			  display: inline-block;
+  			}
+		
+  			.register-button img {
+  			  width: 420px;
+  			  height: 156px;
+  			  display: block;
+			  object-fit: fill;
+  			}
+		
+			  .register-button span {
+  			  position: absolute;
+  			  top: 50%;
+  			  left: 50%;
+  			  transform: translate(-50%, -50%);
+  			  color: #000000;
+  			  font-size: 52px; 
+  			  font-weight: bold;
+  			  white-space: nowrap;
+  			  pointer-events: none;
+  			}
+			  .lang-switch {
+			  position: absolute;
+			  top: 20px;
+			  left: 20px;
+			  z-index: 999;
+			}
+			
+			.lang-switch img {
+			  width: 48px;
+			  height: 48px;
+			  object-fit: cover;
+			  border-radius: 50%;
+			  margin-right: 10px;
+			  border: 2px solid #ffffff;
+			  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+			  cursor: pointer;
+			  transition: transform 0.2s ease;
+			}
+			
+			.lang-switch img:hover {
+			  transform: scale(1.1);
+			}
+			p{
+				margin: 0;
+    			text-align: center;
+			}
+			h1 {
+			  text-align: center;
+			  font-size: 72px;
+			  color: #123b77;
+			  margin-top: 60px;
+			}
 
-		<div class="content-area">
+			.consent-box {
+			  background-color: #003366;
+			  color: white;
+			  padding: 40px 60px;
+			  border-radius: 20px;
+			  max-width: 1660px;
+			  margin: 40px auto 0 auto;
+			  font-size: 42px;
+			  line-height: 1.5;
+			}
+
+			.consent-box ul {
+			  list-style: none;
+			  padding-left: 0;
+			  margin-top: 20px;
+			  margin-bottom: 20px;
+			}
+
+			.consent-box li::before {
+			  content: '● ';
+			  color: white;
+			  margin-right: 10px;
+			}
+
+			.button-row {
+			  display: flex;
+			  justify-content: space-between;
+			  margin: 40px 80px 0px 80px;
+			}
+
+			.register-button {
+			  position: relative;
+			  display: inline-block;
+			  cursor: pointer;
+			}
+			#page-waitcard {
+			  text-align: center;
+			}
+			#card-image {
+			  margin-top: 40px;
+			}
+			/* Container for loading page */
+			#page-loading {
+			  display: none; /* ✅ ซ่อนไว้ก่อน */
+			  justify-content: center;
+			  align-items: center;
+			  height: 100vh;
+			  position: relative;
+			}
+
+			#page-loading.active {
+			  display: flex; /* ✅ แสดงเมื่อ active เท่านั้น */
+			}
+
+
+			/* กล่องรวม dot + ข้อความ */
+			.loading-wrapper {
+			  display: flex;
+			  flex-direction: column;
+			  align-items: center;
+			  position: absolute;
+			  top: 500px; /* ✅ ปรับตำแหน่งแนวตั้งตามต้องการ */
+			}
+
+			/* ซ่อนจุดโหลดเริ่มต้น */
+			.dots {
+			  display: none;
+			}
+
+			/* แสดงจุดเมื่อ page-loading มี class active */
+			#page-loading.active .dots {
+			  display: grid;
+			  grid-template-columns: repeat(2, 40px);
+			  grid-template-rows: repeat(2, 40px);
+			  gap: 20px;
+			  justify-content: center;
+			  align-items: center;
+			}
+
+			/* แต่ละจุดกลม */
+			.dot {
+			  width: 30px;
+			  height: 30px;
+			  border-radius: 50%;
+			  animation: pulse 1.2s infinite ease-in-out;
+			}
+
+			/* กำหนดสีและ delay ของแต่ละจุด */
+			.dot:nth-child(1) { background-color: #1fb8ad; animation-delay: 0s; }
+			.dot:nth-child(2) { background-color: #fca934; animation-delay: 0.2s; }
+			.dot:nth-child(3) { background-color: #34545e; animation-delay: 0.4s; }
+			.dot:nth-child(4) { background-color: #e55858; animation-delay: 0.6s; }
+
+			/* Animation */
+			@keyframes pulse {
+			  0%, 100% { transform: scale(1); opacity: 1; }
+			  50%      { transform: scale(1.4); opacity: 0.6; }
+			}
+
+			/* ข้อความกรุณารอสักครู่ */
+			#page-loading h1 {
+			  display: none;
+			}
+
+			/* เงื่อนไขให้ h1 แสดงเฉพาะตอน active */
+			#page-loading.active h1 {
+			  display: block;
+			  font-size: 52px;
+			  color: #123b77;
+			  margin: 0;
+			  position: absolute;
+			  top: 100px;
+			  white-space: nowrap;
+			}
+
+			#page-success {
+			  text-align: center;
+			}
+
+			.success-content {
+			  display: flex;
+			  flex-direction: row;
+			  align-items: center;
+			  justify-content: center;
+			  gap: 40px;
+			  height: 1080px;
+			}
+
+			.success-text {
+			  display: flex;
+			  align-items: center;
+			  gap: 20px;
+			  text-align: left;
+			}
+
+			.success-icon {
+			  width: 90px;
+			  height: 90px;
+			  position: absolute;
+			  top: 430px;
+			}
+
+			.success-icon.th {
+			  left: 400px;
+			}
+
+			.success-icon.en {
+			  left: 320px;
+			}
+
+
+			.success-text h1 {
+			  margin: 0;
+			  font-size: 52px;
+			}
+
+			.success-text p {
+			  font-size: 52px;
+			  color: #123b77;
+			  margin: 10px 0 0;
+			  line-height: 1.0;
+			}
+
+			.success-card img {
+			  margin-top: 20px;
+			}
+
+			#page-cancel {
+			  /* display: none; */
+			  justify-content: center;
+			  align-items: center;
+			  height: 144vh;
+			  position: relative;
+			}
+
+			.cancel-wrapper {
+			  text-align: center;
+			  position: absolute;
+			  top: 25%;
+			  left: 50%;
+			  transform: translateX(-50%);
+			}
+
+			.cancel-icon {
+			  width: 160px;
+			  height: auto;
+			  margin-bottom: 20px;
+			}
+
+			.cancel-text-red {
+			  color: red;
+			  font-size: 48px;
+			  margin: 0;
+			}
+
+			.cancel-text-blue {
+			  color: #1b1f75;
+			  font-size: 42px;
+			  margin-top: 12px;
+			}
+
+
+		  </style>
+	<body class="bg-register">
+		<!-- หน้า 1: ปุ่มลงทะเบียน/register button -->
+		<div id="page-register" class="page active">
+			<div class="lang-switch">
+				<a href="/?lang=th">
+				  <img src="/image/th.webp" alt="TH">
+				</a>
+				<a href="/?lang=en">
+				  <img src="/image/us.png" alt="EN">
+				</a>
+			  </div>
+
+			<div class="register-container">
+				<div class="register-button" onclick="goToPage('page-consent')">
+				  <img src="/image/button_register.png" alt="ลงทะเบียน">
+				  <% if (lang === 'th') { %>
+					<span>ลงทะเบียน</span>
+				  <% } else { %>
+					<span>Register</span>
+				  <% } %>
+				</div>
+			</div>
+		</div>
+		
+		<div id="page-consent" class="page" style="align-content: center;height: 1080px;">
+		  <h1 style="top: 15px; position: relative;">
+		    <% if (lang === 'th') { %>
+		      ขอความยินยอมในการยืนยันตัวตน
+		    <% } else { %>
+		      Consent for Identity Verification
+		    <% } %>
+		  </h1>
+	  
+		  <div class="consent-box">
+		    <% if (lang === 'th') { %>
+		      <p>เพื่อความปลอดภัยและความถูกต้องในการให้บริการ ระบบจะทำการอ่านข้อมูลจากบัตรประชาชนและภาพถ่ายใบหน้าของท่าน โดยไม่มีการจัดเก็บหรือบันทึกข้อมูลใด ๆ</p>
+		      <ul>
+		        <li>ข้อมูลจะถูกใช้เฉพาะเพื่อยืนยันตัวตนสำหรับการลงทะเบียนเข้าร่วมงานเท่านั้น</li>
+		        <li style="position: relative;bottom: 10px;">ไม่มีการจัดเก็บ ส่งต่อ หรือใช้ในวัตถุประสงค์อื่น</li>
+		      </ul>
+		      <p>โปรดกด “ยินยอม” เพื่อดำเนินการต่อ<br>หากไม่ยินยอม กรุณากด “ยกเลิก”</p>
+		    <% } else { %>
+		      <p>
+		        To ensure the security and accuracy of our service, the system will read information from your national ID card and facial image without storing or recording any data.
+		      </p>
+		      <ul>
+		        <li>The information will be used solely for identity verification during event registration</li>
+		        <li style="position: relative;bottom: 10px;">No data will be stored, shared, or used for any other purpose</li>
+		      </ul>
+		      <p>
+		        Please press “Consent” to proceed.<br>
+		        If you do not consent, please press “Cancel.”
+		      </p>
+		    <% } %>
+		  </div>
+	  
+		  <div class="button-row">
+		    <div class="register-button" onclick="goToPageCancelThenRegister()">
+		      <img src="/image/button_cancel.png" alt="<%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %>">
+		      <span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
+		    </div>
+		    <div class="register-button" onclick="goToPage('page-waitcard')">
+		      <img src="/image/button_register.png" alt="<%= lang === 'th' ? 'ยินยอม' : 'Consent' %>">
+		      <span><%= lang === 'th' ? 'ยินยอม' : 'Consent' %></span>
+		    </div>
+		  </div>
+		</div>
+		<div id="page-waitcard" class="page">
+			<h1 style="top:150px;position: relative;">
+			  <%- lang === 'th'
+				? 'กรุณาเสียบบัตรประชาชน<br>ที่ช่องอ่านบัตรประชาชน'
+				: 'Please insert your ID Card<br>into Cardreader' %>
+			</h1>
+			<img id="card-image" style="position: relative;top: 100px;" src="/image/pic_takecard_in.png" width="500">
+			<div class="button-row">
+				<div class="register-button" onclick="goToPageCancelThenRegister()" style="bottom: -28px;">
+				  <img src="/image/button_cancel.png" alt="<%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %>">
+				  <span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
+				</div>
+				<div class="register-button" onclick="goToPage('page-waitcard')" style="display: none;">
+				  <img src="/image/button_register.png" alt="<%= lang === 'th' ? 'ยินยอม' : 'Consent' %>">
+				  <span><%= lang === 'th' ? 'ยินยอม' : 'Consent' %></span>
+				</div>
+			  </div>
+		</div>
+
+		<div id="page-cancel" class="page">
+			<div class="cancel-wrapper">
+			  <img src="/image/icon_error.png" class="cancel-icon" alt="Cancel Icon">
+			  <h1 class="cancel-text-red"><%= lang === 'th' ? 'รายการถูกยกเลิก' : 'Cancel Transaction' %></h1>
+			  <h2 class="cancel-text-blue"><%= lang === 'th' ? 'ขอบคุณที่ใช้บริการ' : 'Thank you for using service' %></h2>
+			</div>
+		</div>
+		  
+		<div id="page-loading" class="page">
+			<div class="loading-wrapper">
+			  <div class="dots">
+				<span class="dot teal"></span>
+				<span class="dot orange"></span>
+				<span class="dot navy"></span>
+				<span class="dot red"></span>
+			  </div>
+			  <h1 style="position: relative;"><%= lang === 'th' ? 'กรุณารอสักครู่' : 'Please wait' %></h1>
+			</div>
+		  </div>
+		  
+		<div id="page-success" class="page">
+		  <div class="success-content">
+		    <div class="success-text">
+		      <img src="/image/icon_success.png" class="success-icon <%= lang %>" alt="success">
+		      <div>
+		        <h1 style="color: #00aa00;">
+		          <%= lang === 'th' ? 'อ่านข้อมูลสำเร็จ' : 'Read card successful' %>
+		        </h1>
+		        <p>
+		          <%- lang === 'th' ? 'กรุณานำบัตรประชาชน<br>ออกจากช่องอ่านบัตรประชาชน' : 'Please take your ID Card off<br>from the Cardreader' %>
+		        </p>
+		      </div>
+		    </div>
+		
+		    <div class="success-card">
+		      <img src="/image/pic_takecard_off.png" width="500">
+		    </div>
+		  </div>
+		</div>
+
+		  
+
+		
+
+		<!-- <div class="content-area">
 			<div class="camera">
 			  <video id="video">Video stream not available.</video>
 			  <button id="start-button">Take photo</button>
@@ -29,51 +433,85 @@
 		<br />
 		<a href="/pageThree">Page Three</a>
 		<br />
-		<a href="/pageFour">Page Four</a>
+		<a href="/pageFour">Page Four</a> -->
 		<script type="module" src="/javascript/camera.js"></script>
 		<script>
-			document.getElementById("print-btn").addEventListener("click", async () => {
-			  const payload = {
-				type: 4,
-				comPort: "",
-				baudRate: 0,
-				handshake: 0,
-				lptPort: "",
-				ipAddress: "",
-				portNumber: 0,
-				driverName: "",
-				usbId: 912,
-				usbPrinterName: "",
-				widthDPI: 203,
-				heightDPI: 203,
-				printerType: "KIOSK",
-				thaiLines: [
-				  "กมลทรรศน์",
-				  "เรืองสถิตสถาพร",
-				  "06/06/2025",
-				  "110xxxxxxx462",
-				  "Dataone Asia"
-				]
-			  };
+			
+			function goToPage(pageId) {
+  			  	document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  			  	document.getElementById(pageId).classList.add('active');
+				// เปลี่ยนพื้นหลัง
+				const body = document.body;
+      			if (pageId === 'page-register') {
+      			  body.classList.remove('bg-default');
+      			  body.classList.add('bg-register');
+      			} else {
+      			  body.classList.remove('bg-register');
+      			  body.classList.add('bg-default');
+      			}
+  			}
+			
+
+			let i = 0;
+			function startDotAnimation() {
+			  const dots = document.querySelectorAll('#page-loading .dots span');
+			  setInterval(() => {
+			    dots.forEach(d => d.classList.remove('active'));
+			    dots[i].classList.add('active');
+			    i = (i + 1) % dots.length;
+			  }, 300);
+			}
+
+			function goToPageCancelThenRegister() {
+				goToPage('page-cancel');
+			   setTimeout(() => {
+			     goToPage('page-register');
+			   }, 3000);
+			}
+
+
+			// document.getElementById("print-btn").addEventListener("click", async () => {
+			//   const payload = {
+			// 	type: 4,
+			// 	comPort: "",
+			// 	baudRate: 0,
+			// 	handshake: 0,
+			// 	lptPort: "",
+			// 	ipAddress: "",
+			// 	portNumber: 0,
+			// 	driverName: "",
+			// 	usbId: 912,
+			// 	usbPrinterName: "",
+			// 	widthDPI: 203,
+			// 	heightDPI: 203,
+			// 	printerType: "KIOSK",
+			// 	thaiLines: [
+			// 	  "กมลทรรศน์",
+			// 	  "เรืองสถิตสถาพร",
+			// 	  "06/06/2025",
+			// 	  "110xxxxxxx462",
+			// 	  "Dataone Asia"
+			// 	]
+			//   };
 		  
-			  try {
-				const response = await fetch("https://localhost:7213/connect", {
-					  method: "POST",
-					  headers: { "Content-Type": "application/json" },
-					  body: JSON.stringify(payload)
-					});
+			//   try {
+			// 	const response = await fetch("https://localhost:7213/connect", {
+			// 		  method: "POST",
+			// 		  headers: { "Content-Type": "application/json" },
+			// 		  body: JSON.stringify(payload)
+			// 		});
 					
-					const result = await response.json();
+			// 		const result = await response.json();
 					
-					if (result.success) {
-					  document.getElementById("print-result").textContent = "✅ " + result.message;
-					} else {
-					  document.getElementById("print-result").textContent = "❌ " + result.message;
-					}
-			  } catch (error) {
-				document.getElementById("print-result").textContent = "❌ Error: " + error.message;
-			  }
-			});
+			// 		if (result.success) {
+			// 		  document.getElementById("print-result").textContent = "✅ " + result.message;
+			// 		} else {
+			// 		  document.getElementById("print-result").textContent = "❌ " + result.message;
+			// 		}
+			//   } catch (error) {
+			// 	document.getElementById("print-result").textContent = "❌ Error: " + error.message;
+			//   }
+			// });
 		  </script>
 		  
 	</body>

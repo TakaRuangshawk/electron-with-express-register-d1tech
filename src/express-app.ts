@@ -8,7 +8,7 @@ import createError from "http-errors";
 import { expressPort } from "../package.json";
 import cors from "cors";
 import { Server as IOServer } from "socket.io";
-
+const fs = require('fs');
 const app = express();
 const router = express.Router();
 const server = http.createServer(app);
@@ -19,15 +19,20 @@ const io = new IOServer(server, {
   }
 });
 const routes = [
-  { path: "/", viewName: "index", title: "Home" },
+  { path: "/", viewName: "index", title: "Home", },
   { path: "/pageTwo", viewName: "pageTwo", title: "Page 2" },
   { path: "/pageThree", viewName: "pageThree", title: "Page 3" },
   { path: "/pageFour", viewName: "pageFour", title: "Page 4" }
 ];
 
 routes.forEach(({ path, viewName, title }) => {
-  router.get(path, (_req, res) => res.render(viewName, { title }));
+  router.get(path, (req, res) => {
+    const lang = req.query.lang || 'th';
+    const page = "register";
+    res.render(viewName, { title, lang, page });
+  });
 });
+
 
 app.set("port", expressPort);
 app.set("views", path.join(__dirname, "..", "views"));
@@ -44,6 +49,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
+const peopleJsonPath = path.join(__dirname, '../public/people_list.json');
+
 app.use("/", router);
 app.use((err: any, req: any, res: any, _next: any) => {
   res.locals.title = "erro=r";
@@ -64,6 +71,32 @@ app.post('/card-event', (req, res) => {
   }
 
   res.status(200).send('OK');
+});
+
+interface Person {
+  first_name: string;
+  last_name: string;
+  bank: string;
+}
+
+const peopleList: Person[] = JSON.parse(fs.readFileSync(peopleJsonPath, 'utf-8'));
+
+function findPerson(firstName: string, lastName: string): Person | undefined {
+  return peopleList.find(
+    person =>
+      person.first_name === firstName.trim() &&
+      person.last_name === lastName.trim()
+  );
+}
+
+app.post('/check-name', express.json(), (req, res) => {
+  const { f_name, l_name } = req.body;
+  const person = findPerson(f_name, l_name);
+  if (person) {
+    res.json({ found: true, bank: person.bank });
+  } else {
+    res.json({ found: false });
+  }
 });
 
 
