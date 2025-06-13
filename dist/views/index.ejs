@@ -2,15 +2,52 @@
 <%- include('include/head'); %>
 	<html lang="th">
 		<style>
-			.page { display: none; }
-			.page.active { display: block; }
+			@font-face {
+			  font-family: 'DBHelvethaicaX';
+			  src: url('/fonts/DBHelvethaicaX.ttf') format('truetype');
+			  font-weight: 400; /* normal */
+			  font-style: normal;
+			}
+
+			@font-face {
+			  font-family: 'DBHelvethaicaX';
+			  src: url('/fonts/DB Helvethaica X Med v3.2.ttf') format('truetype');
+			  font-weight: 600; /* semi-bold */
+			  font-style: normal;
+			}
+
+			@font-face {
+			  font-family: 'DBHelvethaicaX';
+			  src: url('/fonts/DB HelvethaicaMon X Bd v3.2.ttf') format('truetype');
+			  font-weight: 700; /* bold */
+			  font-style: normal;
+			}
+
+			.page {
+			  display: none;
+			  opacity: 0;
+			  transition: opacity 0.4s ease;
+			}
+			.page.active { 
+				display: block; 
+				opacity: 1;
+			}
+			.page.fade-in {
+			  opacity: 1;
+			}
 			body {
 			  margin: 0;
 			  padding: 0;
-			  font-family: sans-serif;
+			  font-family: 'DBHelvethaicaX';
+			  /* font-family: sans-serif; */
 			}
-			body.bg-register {
+			body.bg-register.th {
 			  background: url('/image/zerostate_th.jpg') no-repeat center center fixed;
+			  background-size: cover;
+			}
+
+			body.bg-register.en {
+			  background: url('/image/zerostate_en.jpg') no-repeat center center fixed;
 			  background-size: cover;
 			}
 
@@ -221,15 +258,16 @@
 			  width: 90px;
 			  height: 90px;
 			  position: absolute;
-			  top: 430px;
 			}
 
 			.success-icon.th {
-			  left: 400px;
+			    left: 465px;
+			    top: 433px;
 			}
 
 			.success-icon.en {
 			  left: 320px;
+			  top: 430px;
 			}
 
 
@@ -275,12 +313,14 @@
 			  color: red;
 			  font-size: 48px;
 			  margin: 0;
+			  text-align: center;
 			}
 
 			.cancel-text-blue {
 			  color: #1b1f75;
 			  font-size: 42px;
 			  margin-top: 12px;
+			  text-align: center;
 			}
 
 
@@ -297,16 +337,16 @@
 			}
 
 			.confirm-flex {
-			  display: flex;
-			  flex-direction: row;
-			  align-items: flex-start;
-			  justify-content: center;
-			  width: 100%;
-			  max-width: 1500px;
-			  margin: 0 auto 60px auto;
-			  gap: 80px;
-			  position: relative;
-    		  top: 100px;
+			    display: flex;
+			    flex-direction: row;
+			    align-items: flex-start;
+			    justify-content: center;
+			    width: 100%;
+			    max-width: 1500px;
+			    margin: 0 auto 60px auto;
+			    gap: 80px;
+			    position: relative;
+			    top: 130px;
 			}
 
 			.confirm-photo {
@@ -324,22 +364,29 @@
 			}
 
 			.confirm-info {
-			  display: flex;
-			  flex-direction: column;
-			  justify-content: center;
-			  min-width: 520px;
-			  gap: 36px;
-			  padding: 48px 0 0 0;
-			  white-space: nowrap;
+			   display: flex;
+			   flex-direction: column;
+			   justify-content: center;
+			   min-width: 520px;
+			   gap: 36px;
+			   padding: 48px 0 0 0;
+			   white-space: nowrap;
+			   position: relative;
+			   top: 80px;
+			}
+
+			.confirm-info .label {
+			  display: inline-block;
+			  width: 380px;
+			  font-weight: bold;
 			}
 
 			.confirm-info div {
-			  color: #123b77;
-			  font-size: 44px;
-			  font-weight: bold;
-			  line-height: 1.2;
-			  margin-bottom: 10px;
-			  letter-spacing: 1px;
+			    color: #123b77;
+			    font-size: 42px;
+			    font-weight: bold;
+			    line-height: 1.2;
+			    margin-bottom: 10px;
 			}
 
 			.confirm-info span {
@@ -347,11 +394,125 @@
 			  color: #123b77;
 			  font-weight: bold;
 			}
+			
+			.result-content {
+			  display: flex;
+			  justify-content: flex-start;
+			  align-items: center;
+			  box-sizing: border-box;
+			  position: relative;
+			  padding-left: 120px;
+			}
 
+			.result-status {
+			  	width: 720px;
+			  	display: flex;
+			  	flex-direction: column;
+			  	justify-content: center;
+			  	position: relative;
+    			top: 350px;
+			}
+			.result-icon.th{
+				position: relative;
+    			top: 110px;
+    			left: 100px;
+			}
+			.result-icon.en{
+				position: relative;
+    			top: 105px;
+    			left: 55px;
+			}
+			.result-icon img {
+			  width: 100px;
+			  margin-bottom: 20px;
+			}
+
+			.result-main-msg {
+			  	font-size: 60px;
+			  	font-weight: bold;
+			  	color: #19b43b;
+			  	margin-bottom: 16px;
+			  	display: flex;
+    			justify-content: center;
+    			/* padding-left: 35px; */
+			}
+
+			.result-sub-msg {
+				display: flex;
+				text-align: center;
+    			justify-content: center;
+			  	font-size: 60px;
+			  	font-weight: 600;
+			  	color: #273564;
+			}
+
+			.result-ticket {
+			  position: absolute;
+			  right: 100px;
+			  top: 230px;
+			  width: 700px;
+			  background: radial-gradient(circle at center, rgba(255, 227, 190, 0.1) 0%, rgba(255, 227, 190, 0.85) 90%);
+			  border-radius: 32px;
+			  padding: 40px 54px;
+			  display: flex;
+			  flex-direction: column;
+			  align-items: flex-end;
+			  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
+			}
+
+			.ticket-header {
+			  width: 100%;
+			  display: flex;
+			  justify-content: center;
+			  margin-bottom: 20px;
+			}
+
+			.ticket-logo {
+			  width: 300px;
+			}
+
+			.ticket-info {
+			    width: 100%;
+			    color: #21396b;
+			    font-size: 42px;
+			    font-weight: 600;
+			    line-height: 1.4;
+			    white-space: nowrap;
+			}
+
+			.ticket-info .info-label {
+			    width: 338px;
+			    display: inline-block;
+			    font-weight: 500;
+			    white-space: nowrap;
+			}
+
+			.ticket-info > div {
+			  margin-bottom: 16px;
+			}
+
+			.ticket-register-count {
+			  text-align: center;
+			  margin-top: 20px;
+			  font-size: 88px;
+			  font-weight: 800;
+			  color: #20307c;
+			}
+			.cancel-wrapper-missing-name {
+			    text-align: center;
+			    position: absolute;
+			    top: 34%;
+			    left: 50%;
+			    transform: translateX(-50%);
+			}
 
 		  </style>
-	<body class="bg-register">
+	<body class="bg-register <%= lang %>">
 		<!-- หน้า 1: ปุ่มลงทะเบียน/register button -->
+		 <!-- <button style="position: absolute;" id="print-btn">🖨️ Send to Printer</button> -->
+		<div>
+			<span style="display: none;" id="confirm-register-count"></span>
+		  </div>
 		<div id="page-register" class="page active">
 			<div class="lang-switch">
 				<a href="/?lang=th">
@@ -374,47 +535,47 @@
 			</div>
 		</div>
 		
-		<div id="page-consent" class="page" style="align-content: center;height: 1080px;">
-		  <h1 style="top: 15px; position: relative;">
-		    <% if (lang === 'th') { %>
-		      ขอความยินยอมในการยืนยันตัวตน
-		    <% } else { %>
-		      Consent for Identity Verification
-		    <% } %>
-		  </h1>
+		<div id="page-consent" class="page" style="align-content: center;height: 1061px;">
+			<h1 style="top: 15px; position: relative;">
+		    	<% if (lang === 'th') { %>
+		      		ขอความยินยอมในการยืนยันตัวตน
+		    	<% } else { %>
+		      		Consent for Identity Verification
+		    	<% } %>
+		  	</h1>
 	  
-		  <div class="consent-box">
-		    <% if (lang === 'th') { %>
-		      <p>เพื่อความปลอดภัยและความถูกต้องในการให้บริการ ระบบจะทำการอ่านข้อมูลจากบัตรประชาชนและภาพถ่ายใบหน้าของท่าน โดยไม่มีการจัดเก็บหรือบันทึกข้อมูลใด ๆ</p>
-		      <ul>
-		        <li>ข้อมูลจะถูกใช้เฉพาะเพื่อยืนยันตัวตนสำหรับการลงทะเบียนเข้าร่วมงานเท่านั้น</li>
-		        <li style="position: relative;bottom: 10px;">ไม่มีการจัดเก็บ ส่งต่อ หรือใช้ในวัตถุประสงค์อื่น</li>
-		      </ul>
-		      <p>โปรดกด “ยินยอม” เพื่อดำเนินการต่อ<br>หากไม่ยินยอม กรุณากด “ยกเลิก”</p>
-		    <% } else { %>
-		      <p>
-		        To ensure the security and accuracy of our service, the system will read information from your national ID card and facial image without storing or recording any data.
-		      </p>
-		      <ul>
-		        <li>The information will be used solely for identity verification during event registration</li>
-		        <li style="position: relative;bottom: 10px;">No data will be stored, shared, or used for any other purpose</li>
-		      </ul>
-		      <p>
-		        Please press “Consent” to proceed.<br>
-		        If you do not consent, please press “Cancel.”
-		      </p>
-		    <% } %>
+		  	<div class="consent-box">
+		    	<% if (lang === 'th') { %>
+		    	  <p>เพื่อความปลอดภัยและความถูกต้องในการให้บริการ ระบบจะทำการอ่านข้อมูลจากบัตรประชาชนและภาพถ่ายใบหน้าของท่าน โดยไม่มีการจัดเก็บหรือบันทึกข้อมูลใด ๆ</p>
+		    	  <ul>
+		    	    <li>ข้อมูลจะถูกใช้เฉพาะเพื่อยืนยันตัวตนสำหรับการลงทะเบียนเข้าร่วมงานเท่านั้น</li>
+		    	    <li style="position: relative;bottom: 10px;">ไม่มีการจัดเก็บ ส่งต่อ หรือใช้ในวัตถุประสงค์อื่น</li>
+		    	  </ul>
+		    	  <p>โปรดกด “ยินยอม” เพื่อดำเนินการต่อ<br>หากไม่ยินยอม กรุณากด “ยกเลิก”</p>
+		    	<% } else { %>
+		      		<p>
+		      		  To ensure the security and accuracy of our service, the system will read information from your national ID card and facial image without storing or recording any data.
+		      		</p>
+		      		<ul>
+		        	<li>The information will be used solely for identity verification during event registration</li>
+		        	<li style="position: relative;bottom: 10px;">No data will be stored, shared, or used for any other purpose</li>
+		      		</ul>
+		      		<p>
+		      		  Please press “Consent” to proceed.<br>
+		      		  If you do not consent, please press “Cancel.”
+		      		</p>
+		    	<% } %>
 		  </div>
 	  
 		  <div class="button-row">
-		    <div class="register-button" onclick="goToPageCancelThenRegister()">
-		      <img src="/image/button_cancel.png" alt="<%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %>">
-		      <span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
-		    </div>
-		    <div class="register-button" onclick="goToPage('page-waitcard')">
-		      <img src="/image/button_register.png" alt="<%= lang === 'th' ? 'ยินยอม' : 'Consent' %>">
-		      <span><%= lang === 'th' ? 'ยินยอม' : 'Consent' %></span>
-		    </div>
+		    	<div class="register-button" onclick="goToPageCancelThenRegister()">
+		      		<img src="/image/button_cancel.png" alt="<%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %>">
+		      		<span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
+		    	</div>
+		    	<div class="register-button" onclick="goToPage('page-waitcard')">
+		    	  	<img src="/image/button_register.png" alt="<%= lang === 'th' ? 'ยินยอม' : 'Consent' %>">
+		    	  	<span><%= lang === 'th' ? 'ยินยอม' : 'Confirm' %></span>
+		    	</div>
 		  </div>
 		</div>
 		<div id="page-waitcard" class="page">
@@ -441,6 +602,14 @@
 			  <img src="/image/icon_error.png" class="cancel-icon" alt="Cancel Icon">
 			  <h1 class="cancel-text-red"><%= lang === 'th' ? 'รายการถูกยกเลิก' : 'Cancel Transaction' %></h1>
 			  <h2 class="cancel-text-blue"><%= lang === 'th' ? 'ขอบคุณที่ใช้บริการ' : 'Thank you for using service' %></h2>
+			</div>
+		</div>
+
+		<div id="page-cancel-missing-name" class="page">
+			<div class="cancel-wrapper-missing-name">
+			  <img src="/image/icon_error.png" class="cancel-icon" alt="Cancel Icon">
+			  <h1 class="cancel-text-red"><%- lang === 'th' ? 'รายการถูกยกเลิก' : 'Cancel Transaction' %></h1>
+			  <h2 class="cancel-text-blue"><%- lang === 'th' ? 'กรุณานำบัตรประชาชน<br>ออกจากช่องอ่านบัตรประชาชน' : 'Please take your ID Card off <br>from the Cardreader' %></h2>
 			</div>
 		</div>
 		  
@@ -477,6 +646,9 @@
 		</div>
 
 		<div id="page-camera" class="page">
+			<div id="countdown" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+  			font-size: 200px; color: white; display: none; z-index: 10; font-weight: bold;">3</div>
+
 			<h1 style="position: relative;top: 150px;font-size:62px">
 			  <%= lang === 'th'
 				? 'ถ่ายภาพเพื่อการยืนยันตัวตน กรุณามองที่กล้องบันทึกภาพ'
@@ -528,15 +700,15 @@
 			  </div>
 			  <div class="confirm-info">
 				<div>
-				  <%= lang === 'th' ? 'หมายเลขบัตรประชาชน:' : 'ID Card No:' %>
-				  <span id="confirm-nid"></span>
+					<span class="label"><%= lang === 'th' ? 'หมายเลขบัตรประชาชน:' : 'ID Card No:' %></span>
+				  	<span id="confirm-nid"></span>
 				</div>
 				<div>
-				  <%= lang === 'th' ? 'ชื่อ - นามสกุล:' : 'Full Name:' %>
+					<span class="label"> <%= lang === 'th' ? 'ชื่อ - นามสกุล:' : 'Full Name:' %> </span>
 				  <span id="confirm-fullname"></span>
 				</div>
 				<div>
-				  <%= lang === 'th' ? 'กลุ่มลูกค้า:' : 'Customer Group:' %>
+					<span class="label"> <%= lang === 'th' ? 'กลุ่มลูกค้า:' : 'Customer Group:' %></span>
 				  <span id="confirm-bank"></span>
 				</div>
 			  </div>
@@ -547,9 +719,50 @@
 				<img src="/image/button_cancel.png" alt="">
 				<span><%= lang === 'th' ? 'ยกเลิก' : 'Cancel' %></span>
 			  </div>
-			  <div class="register-button" onclick="submitRegister()">
+			  <div class="register-button" onclick="goToPage('page-result')">
 				<img src="/image/button_register.png" alt="">
 				<span><%= lang === 'th' ? 'ยืนยัน' : 'Confirm' %></span>
+			  </div>
+			</div>
+		  </div>
+		  <div id="page-result" class="page">
+			<div class="result-content">
+			  <!-- ฝั่งซ้าย: สถานะ -->
+			  <div class="result-status">
+				<div class="result-icon <%= lang %>">
+					<img src="/image/icon_success.png" alt="Success" />
+				  </div>
+				<div class="result-main-msg" style="color: #19b43b;">
+					
+				  <%= lang === 'th' ? 'ลงทะเบียนสำเร็จ' : 'Register successful' %>
+				</div>
+				<div class="result-sub-msg">
+				  <%= lang === 'th' ? 'กรุณารับใบลงทะเบียน' : 'Please take your registration form' %>
+				</div>
+			  </div>
+		  
+			  <!-- ฝั่งขวา: ข้อมูลการลงทะเบียน -->
+			  <div class="result-ticket">
+				<div class="ticket-header">
+				  <img src="/image/Logo_d1.png" class="ticket-logo" alt="logo" />
+				</div>
+				<div class="ticket-info">
+				  <div>
+					<span class="info-label"><%= lang === 'th' ? 'หมายเลขบัตรประชาชน:' : 'ID Card Number:' %></span>
+					<span id="result-nid"></span>
+				  </div>
+				  <div>
+					<span class="info-label"><%= lang === 'th' ? 'ชื่อ-นามสกุล:' : 'FirstName LastName:' %></span>
+					<span id="result-fullname"></span>
+				  </div>
+				  <div>
+					<span class="info-label"><%= lang === 'th' ? 'กลุ่มลูกค้า:' : 'Customer Group:' %></span>
+					<span id="result-bank"></span>
+				  </div>
+				  <div class="ticket-register-count">
+					<span id="result-register-count"></span>
+				  </div>
+				</div>
 			  </div>
 			</div>
 		  </div>
@@ -568,8 +781,8 @@
 			  <img id="photo" alt="The screen capture will appear in this box." />
 			</div>
 		  </div>
-		  <button id="print-btn">🖨️ Send to Printer</button>
-		  <pre id="print-result"></pre>
+		  
+		  
 
 		<p>Other Pages:</p>
 		<a href="/pageTwo">Page Two</a>
@@ -581,8 +794,30 @@
 		<script>
 			
 			function goToPage(pageId) {
-  			  	document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  			  	document.getElementById(pageId).classList.add('active');
+  			  	// document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  			  	// document.getElementById(pageId).classList.add('active');
+				const pages = document.querySelectorAll('.page');
+  				const newPage = document.getElementById(pageId);
+
+  				pages.forEach(p => {
+  				  if (p.id !== pageId) {
+  				    p.classList.remove('fade-in');
+  				    p.classList.remove('active');
+  				    p.style.opacity = 0;
+  				    p.style.display = 'none';
+  				  }
+  				});
+			
+  				// ✅ ตั้งค่าหน้าใหม่
+  				const displayMode = pageId === 'page-loading' ? 'flex' : 'block';
+  				newPage.style.display = displayMode;
+  				newPage.style.opacity = 0;
+			
+  				setTimeout(() => {
+  				  newPage.classList.add('active');
+  				  newPage.classList.add('fade-in');
+  				  newPage.style.opacity = 1;
+  				}, 10);
 				// เปลี่ยนพื้นหลัง
 				const body = document.body;
       			if (pageId === 'page-register') {
@@ -592,8 +827,17 @@
       			  body.classList.remove('bg-register');
       			  body.classList.add('bg-default');
       			}
-				if (pageId === 'page-camera') resetCameraPage();
-				if (pageId === 'page-confirm') onShowPageConfirm();
+				if (pageId === 'page-camera') {
+					resetCameraPage();
+				}
+				if (pageId === 'page-confirm') {
+					onShowPageConfirm();
+				}
+				if (pageId === 'page-result'){
+					showResultPage();
+					printRegisterSlip()
+					goToPageRegister();
+				} 
   
   			}
 			
@@ -609,23 +853,40 @@
 			}
 
 			function capturePhoto() {
-			  const canvas = document.createElement('canvas');
-			  const video = document.getElementById('video');
-			  canvas.width = video.videoWidth;
-			  canvas.height = video.videoHeight;
-			  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-						
-			  const dataUrl = canvas.toDataURL('image/png');
-			  window.capturedPhoto = dataUrl;
-						
-			  document.getElementById('camera-live').style.display = 'none';
-			  document.getElementById('camera-preview').style.display = 'flex';
-			  document.getElementById('photo-preview').src = dataUrl;
-						
-			  document.getElementById('btn-capture').style.display = 'none';
-			  document.getElementById('btn-retake').style.display = 'inline-block';
-			  document.getElementById('btn-next').style.display = 'inline-block';
+			  const countdownEl = document.getElementById('countdown');
+			  let countdown = 3;
+
+			  countdownEl.textContent = countdown;
+			  countdownEl.style.display = 'block';
+
+			  const interval = setInterval(() => {
+			    countdown--;
+			    if (countdown === 0) {
+			      clearInterval(interval);
+			      countdownEl.style.display = 'none';
+				
+			      const canvas = document.createElement('canvas');
+			      const video = document.getElementById('video');
+			      canvas.width = video.videoWidth;
+			      canvas.height = video.videoHeight;
+			      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+				
+			      const dataUrl = canvas.toDataURL('image/png');
+			      window.capturedPhoto = dataUrl;
+				
+			      document.getElementById('camera-live').style.display = 'none';
+			      document.getElementById('camera-preview').style.display = 'flex';
+			      document.getElementById('photo-preview').src = dataUrl;
+				
+			      document.getElementById('btn-capture').style.display = 'none';
+			      document.getElementById('btn-retake').style.display = 'inline-block';
+			      document.getElementById('btn-next').style.display = 'inline-block';
+			    } else {
+			      countdownEl.textContent = countdown;
+			    }
+			  }, 1000);
 			}
+
 			function retakePhoto() {
 			  document.getElementById('camera-live').style.display = 'flex';
 			  document.getElementById('camera-preview').style.display = 'none';
@@ -640,15 +901,34 @@
 			  document.getElementById('confirm-nid').textContent = maskNid(data.nid || '');
 			  document.getElementById('confirm-fullname').textContent = `${data.f_name || ''} ${data.l_name || ''}`;
 			  document.getElementById('confirm-bank').textContent = data.bank || '';
+			  document.getElementById('confirm-register-count').textContent = data.register_count || '';
 			}
+			function showResultPage() {
+				//ตัวอย่างข้อมูล
+				//window.cardData.f_name = 'กมลทรรศน์';
+				//window.cardData.l_name = 'เรืองสถิตสถาพร';
+				//window.cardData.nid= '1100XXXXXX462';
+				//window.cardData.bank = 'DATAONE';
+				//window.cardData.register_count = '11';
+			  // สมมติ window.cardData มีข้อมูลจาก register แล้ว
+			  	document.getElementById('result-nid').textContent = maskNid(window.cardData.nid);
+			  	document.getElementById('result-fullname').textContent = `${window.cardData.f_name} ${window.cardData.l_name}`;
+			  	document.getElementById('result-bank').textContent = window.cardData.bank;
+			  	document.getElementById('result-register-count').textContent = window.cardData.register_count;
+				  
 
+			}
 			function maskNid(nid) {
 			  if (!nid || nid.length < 4) return nid;
 			  // ตัวอย่าง: 1100123456789 → 1100XXXXXXX789
 			  return nid.slice(0,4) + 'XXXXXXX' + nid.slice(-3);
 			}
 
-
+			function goToPageRegister() {
+			   setTimeout(() => {
+			     goToPage('page-register');
+			   }, 5000);
+			}
 			function goToPageCancelThenRegister() {
 				goToPage('page-cancel');
 			   setTimeout(() => {
@@ -675,50 +955,82 @@
 			  document.getElementById('btn-next').style.display = 'none';
 			}
 
+			function printRegisterSlip() {
+
+			  const payload = {
+			    type: 4,
+			    comPort: "",
+			    baudRate: 0,
+			    handshake: 0,
+			    lptPort: "",
+			    ipAddress: "",
+			    portNumber: 0,
+			    driverName: "",
+			    usbId: 912,
+			    usbPrinterName: "",
+			    widthDPI: 203,
+			    heightDPI: 203,
+			    printerType: "KIOSK",
+			    thaiLines: [
+			      maskNid(window.cardData.nid),                             // บัตรประชาชน (Masked)
+			      `${window.cardData.f_name} ${window.cardData.l_name}`,     // ชื่อ-นามสกุล
+			      window.cardData.bank                                      // กลุ่มลูกค้า
+			    ],
+			    registerCount: "" + window.cardData.register_count || ""
+			  };
+			
+			  fetch("https://localhost:7213/Printer/connect", {
+			    method: "POST",
+			    headers: { "Content-Type": "application/json" },
+			    body: JSON.stringify(payload)
+			  });
+			  console.log(payload);
+			}
 
 
-			// document.getElementById("print-btn").addEventListener("click", async () => {
-			//   const payload = {
-			// 	type: 4,
-			// 	comPort: "",
-			// 	baudRate: 0,
-			// 	handshake: 0,
-			// 	lptPort: "",
-			// 	ipAddress: "",
-			// 	portNumber: 0,
-			// 	driverName: "",
-			// 	usbId: 912,
-			// 	usbPrinterName: "",
-			// 	widthDPI: 203,
-			// 	heightDPI: 203,
-			// 	printerType: "KIOSK",
-			// 	thaiLines: [
-			// 	  "กมลทรรศน์",
-			// 	  "เรืองสถิตสถาพร",
-			// 	  "06/06/2025",
-			// 	  "110xxxxxxx462",ปx
-			// 	  "Dataone Asia"
-			// 	]
-			//   };
-		  
-			//   try {
-			// 	const response = await fetch("https://localhost:7213/connect", {
-			// 		  method: "POST",
-			// 		  headers: { "Content-Type": "application/json" },
-			// 		  body: JSON.stringify(payload)
-			// 		});
-					
-			// 		const result = await response.json();
-					
-			// 		if (result.success) {
-			// 		  document.getElementById("print-result").textContent = "✅ " + result.message;
-			// 		} else {
-			// 		  document.getElementById("print-result").textContent = "❌ " + result.message;
-			// 		}
-			//   } catch (error) {
-			// 	document.getElementById("print-result").textContent = "❌ Error: " + error.message;
-			//   }
-			// });
+
+
+			 //document.getElementById("print-btn").addEventListener("click", async () => {
+			 //  const payload = {
+			 //	type: 4,
+			 //	comPort: "",
+			 //	baudRate: 0,
+			 //	handshake: 0,
+			 //	lptPort: "",
+			 //	ipAddress: "",
+			 //	portNumber: 0,
+			 //	driverName: "",
+			 //	usbId: 912,
+			 //	usbPrinterName: "",
+			 //	widthDPI: 203,
+			 //	heightDPI: 203,
+			 //	printerType: "KIOSK",
+			 //	thaiLines: [
+			 //	  "110xxxxxxx462",
+			 //	  "กมลทรรศน์ เรืองสถิตสถาพร",
+			 //	  "DATAONE ASIA",
+			 //	],
+			//	registerCount: 4
+			 //  };
+	//
+			 //  try {
+			 //	const response = await fetch("https://localhost:7213/Printer/connect", {
+			 //		  method: "POST",
+			 //		  headers: { "Content-Type": "application/json" },
+			 //		  body: JSON.stringify(payload)
+			 //		});
+			//
+			 //		const result = await response.json();
+			//
+			 //		if (result.success) {
+			 //		  document.getElementById("print-result").textContent = "✅ " + result.message;
+			 //		} else {
+			 //		  document.getElementById("print-result").textContent = "❌ " + result.message;
+			 //		}
+			 //  } catch (error) {
+			 //	document.getElementById("print-result").textContent = "❌ Error: " + error.message;
+			 //  }
+			 //});
 		  </script>
 		  
 	</body>

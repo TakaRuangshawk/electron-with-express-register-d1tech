@@ -10,7 +10,7 @@ import {Socket} from "socket.io";
 const appName = app.getPath("exe");
 const expressAppUrl = "http://127.0.0.1:3000";
 let mainWindow: BrowserWindow | null;
-
+app.commandLine.appendSwitch('ignore-certificate-errors');
 const server = require('http').createServer();
 const io = require('socket.io')(server, {
   cors: {origin: "*"},
@@ -90,8 +90,7 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
-    width: 1600,
-    height: 900,
+    fullscreen: true,
     icon: path.join(__dirname, "..", "favicon.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),

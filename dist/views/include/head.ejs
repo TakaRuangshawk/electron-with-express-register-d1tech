@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="stylesheets/style.css" />
 	<script type="module">
 		import { io } from "http://cdn.socket.io/4.8.0/socket.io.esm.min.js";
-
+		
 		const socket = io('http://localhost:3000');
 		let currentUser = {
 			  nid: '',
@@ -21,8 +21,10 @@
 			console.log(message);
 		});
 		socket.on('card-inserted', () => {
-			  
-			  setTimeout(() => goToPage('page-loading'), 1000);
+			const currentPage = document.querySelector('.page.active');
+			if (currentPage && currentPage.id === 'page-waitcard') {
+  			  setTimeout(() => goToPage('page-loading'), 1000);
+  			}
 		});
 		socket.on('card-data', data => {
 		  const { nid,f_name, l_name } = data;
@@ -33,18 +35,22 @@
 		  fetch('/check-name', {
 		    method: 'POST',
 		    headers: { 'Content-Type': 'application/json' },
-		    body: JSON.stringify({nid, f_name, l_name })
+		    body: JSON.stringify({ f_name, l_name })
 		  })
 		    .then(res => res.json())
 		    .then(result => {
 		      if (result.found) {
-		        window.cardData.bank = result.bank;
-		        console.log('เลข:', nid ,'ชื่อ:', f_name, l_name, 'ธนาคาร:', result.bank);
+		        // result.register_count มีค่ารอบล่าสุด
+				window.cardData.bank = result.bank;
+		        window.cardData.register_count = result.register_count;
+		        console.log("รอบที่:", result.register_count);			
 		        goToPage('page-success');
-		      } else {
-		        alert("ไม่พบชื่อในระบบ กรุณาติดต่อเจ้าหน้าที่");
-		      }
+			} else {
+				goToPage('page-cancel-missing-name');
+
+    		}	
 		    });
+
 		});
 		
 
@@ -53,6 +59,9 @@
   			if (currentPage && currentPage.id === 'page-success') {
   			  setTimeout(() => goToPage('page-camera'), 1000);
   			}
+			else if (currentPage && currentPage.id === 'page-cancel-missing-name') {
+				goToPage('page-register');
+			}
 		});
 
 	</script>

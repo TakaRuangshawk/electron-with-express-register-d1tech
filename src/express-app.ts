@@ -8,6 +8,7 @@ import createError from "http-errors";
 import { expressPort } from "../package.json";
 import cors from "cors";
 import { Server as IOServer } from "socket.io";
+import * as XLSX from 'xlsx';
 const fs = require('fs');
 const app = express();
 const router = express.Router();
@@ -18,6 +19,36 @@ const io = new IOServer(server, {
     methods: ["GET", "POST"]
   }
 });
+const peopleJsonPath = path.join('D:/d1config/people_list.json');
+const excelPath = path.join('D:/d1config/รายชื่อลูกค้า.xlsx');
+function syncPeopleFromExcel() {
+  if (!fs.existsSync(excelPath)) return;
+
+  const people: Person[] = fs.existsSync(peopleJsonPath)
+    ? JSON.parse(fs.readFileSync(peopleJsonPath, "utf-8"))
+    : [];
+
+  const workbook = XLSX.readFile(excelPath);
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const rows: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+  for (let i = 3; i < rows.length; i++) {
+    const row = rows[i];
+    const first = row[2]?.toString().trim();
+    const last = row[3]?.toString().trim();
+    const bank = row[5]?.toString().trim();
+
+    if (!first || !last || !bank) continue;
+
+    const exists = people.some(p => p.first_name === first && p.last_name === last && p.bank === bank);
+    if (!exists) {
+      people.push({ first_name: first, last_name: last, bank });
+    }
+  }
+  fs.writeFileSync(peopleJsonPath, JSON.stringify(people, null, 2), 'utf-8');
+}
+
+syncPeopleFromExcel();
 const routes = [
   { path: "/", viewName: "index", title: "Home", },
   { path: "/pageTwo", viewName: "pageTwo", title: "Page 2" },
@@ -49,7 +80,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
-const peopleJsonPath = path.join(__dirname, '../public/people_list.json');
+
 
 app.use("/", router);
 app.use((err: any, req: any, res: any, _next: any) => {
@@ -77,27 +108,54 @@ interface Person {
   first_name: string;
   last_name: string;
   bank: string;
+  register_count?: number;
 }
 
 const peopleList: Person[] = JSON.parse(fs.readFileSync(peopleJsonPath, 'utf-8'));
 
-function findPerson(firstName: string, lastName: string): Person | undefined {
-  return peopleList.find(
-    person =>
-      person.first_name === firstName.trim() &&
-      person.last_name === lastName.trim()
-  );
+let maxRegisterCount = 0;
+for (const person of peopleList) {
+  if (typeof person.register_count === "number" && person.register_count > maxRegisterCount) {
+    maxRegisterCount = person.register_count;
+  }
 }
+let globalRegisterCounter = maxRegisterCount;
+
+function getNextRegisterCount() {
+  globalRegisterCounter += 1;
+  return globalRegisterCounter;
+}
+
+function findPerson(firstName: string, lastName: string) {
+  const person = peopleList.find(
+    p => p.first_name === firstName.trim() && p.last_name === lastName.trim()
+  );
+  if (!person) return null;
+
+  if (!('register_count' in person)) {
+    person.register_count = getNextRegisterCount();
+    fs.writeFileSync(peopleJsonPath, JSON.stringify(peopleList, null, 2), 'utf-8');
+  }
+
+  return person;
+}
+
 
 app.post('/check-name', express.json(), (req, res) => {
   const { f_name, l_name } = req.body;
   const person = findPerson(f_name, l_name);
+
   if (person) {
-    res.json({ found: true, bank: person.bank });
+    res.json({
+      found: true,
+      bank: person.bank,
+      register_count: person.register_count 
+    });
   } else {
     res.json({ found: false });
   }
 });
+
 
 
 app.use((_req, _res, next) => next(createError(404)));
